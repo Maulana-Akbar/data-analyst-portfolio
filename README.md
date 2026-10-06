@@ -1,2 +1,2 @@
 # data-analyst-portfolio
-This repository intend to showcase what hava i done as an analyst
+This repository intend to showcase what have been done as an analyst
