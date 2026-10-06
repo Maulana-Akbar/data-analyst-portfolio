@@ -120,3 +120,17 @@ Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian stra
 4. **Peralihan Strategi Promosi ke Metode Bundling:**
    Sebagai alternatif dari pemotongan harga langsung, direkomendasikan untuk mulai menerapkan strategi *bundling* produk. Menggabungkan produk yang banyak diminati dengan produk bermargin tinggi diharapkan dapat mempertahankan antusiasme pembeli sekaligus menjaga tingkat profitabilitas secara menyeluruh.
 
+---
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Tools-Power%20BI-yellow?style=for-the-badge&logo=powerbi" alt="Power BI" />
+  <img src="https://img.shields.io/badge/Language-DAX-blue?style=for-the-badge" alt="DAX" />
+  <img src="https://img.shields.io/badge/Data%20Prep-Power%20Query-orange?style=for-the-badge" alt="Power Query" />
+  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status" />
+</p>
+
+<p align="center">
+  <a href="https://www.linkedin.com/in/radenmaulanaakbar" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Raden%20Maulana%20Akbar-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Raden Maulana Akbar" />
+  </a>
+</p>
