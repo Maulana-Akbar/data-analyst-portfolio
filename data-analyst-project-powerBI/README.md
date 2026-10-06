@@ -38,17 +38,22 @@ Project ini menganalisis hubungan antara angka penjualan (`Sales`), tingkat disk
 * **Jumlah Kolom:** 21 kolom
 
 ---
-
+ 
 ## Data Preparation
 
-Proses pembersihan dan manipulasi data dilakukan untuk memastikan kelancaran analisis, antara lain:
+Proses pembersihan dan manipulasi data dilakukan untuk memastikan kelancaran analisis. Berikut adalah tahapan yang dilakukan beserta hasilnya:
 
 * **Penilaian Kualitas Data:** Validasi untuk memastikan tidak ada nilai yang hilang atau kosong serta tidak ada data duplikat pada baris transaksi.
+  * **Hasil:** Dataset terbukti bersih dengan hasil **0 *missing values*** dan **0 data duplikat**.
 * **Konversi Tipe Data:** Mengubah tipe data pada kolom `Order Date` dan `Ship Date` menjadi format tanggal, kolom `Sales`, `Profit`, dan `Discount` menjadi format desimal (*float*), serta `Quantity` menjadi bilangan bulat (*integer*).
-* **Identifikasi Anomali Kategorikal:** Evaluasi sebaran distribusi pada kolom `Ship Mode`, `Segment`, dan `Region`.
+  * **Hasil:** Seluruh tipe data berhasil disesuaikan (mengikuti standar *Locale* United States) sehingga fungsi kalkulasi numerik dan analisis berbasis waktu (*time-series*) dapat berjalan dengan akurat.
+* **Identifikasi Anomali Kategorikal:** Evaluasi sebaran distribusi (*outlier* kategorikal) pada beberapa metrik dimensi seperti `Ship Mode`, `Segment`, dan `Region`.
+  * **Hasil:** Ditemukan dominasi transaksi pada opsi pengiriman *Standard Class* (59,72%), pelanggan segmen *Consumer* (51,94%), serta konsentrasi penjualan tertinggi di region *West* (terutama negara bagian California sebesar 20,02%).
 * **Rekayasa Fitur (*Feature Engineering*):**
-  * Membuat kolom `Discount Segment` untuk mengelompokkan rentang nilai diskon.
-  * Membuat kolom `Order Type` untuk membedakan transaksi yang menggunakan diskon dengan transaksi tanpa diskon.
+  * Membuat kolom `Discount Segment` untuk mengelompokkan rentang nilai diskon. 
+    * **Hasil:** Terbentuk 6 kelompok rentang diskon (Mulai dari *0% (No Discount)* hingga *41%+*) yang mempermudah evaluasi ambang batas aman pemotongan harga.
+  * Membuat kolom `Order Type` untuk membedakan transaksi yang menggunakan diskon dengan transaksi harga normal. 
+    * **Hasil:** Transaksi berhasil dipisahkan secara tegas menjadi dua kategori (*Discounted* dan *No Discount*) untuk memperjelas perbandingan profitabilitas antara keduanya.
 
 ---
 
@@ -93,6 +98,12 @@ Proses pembersihan dan manipulasi data dilakukan untuk memastikan kelancaran ana
 
 ---
 
+## Conclusion
+
+Perusahaan telah berhasil mencatatkan volume penjualan yang kuat di pasar. Meskipun demikian, penggunaan diskon yang kurang terukur memberikan dampak pengurangan yang cukup signifikan terhadap potensi keuntungan perusahaan. Dengan mempertimbangkan optimalisasi kebijakan batas diskon, mengevaluasi promosi pada kategori produk tertentu, serta menyesuaikan strategi promosi di masing-masing regional, perusahaan memiliki peluang yang sangat besar untuk meningkatkan margin profit tanpa perlu mengorbankan pertumbuhan omzet.
+
+---
+
 ## Business Recommendations
 
 Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian strategi yang direkomendasikan untuk mendukung pertumbuhan profit perusahaan:
@@ -109,8 +120,3 @@ Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian stra
 4. **Peralihan Strategi Promosi ke Metode Bundling:**
    Sebagai alternatif dari pemotongan harga langsung, direkomendasikan untuk mulai menerapkan strategi *bundling* produk. Menggabungkan produk yang banyak diminati dengan produk bermargin tinggi diharapkan dapat mempertahankan antusiasme pembeli sekaligus menjaga tingkat profitabilitas secara menyeluruh.
 
----
-
-## Conclusion
-
-Perusahaan telah berhasil mencatatkan volume penjualan yang kuat di pasar. Meskipun demikian, penggunaan diskon yang kurang terukur memberikan dampak pengurangan yang cukup signifikan terhadap potensi keuntungan perusahaan. Dengan mempertimbangkan optimalisasi kebijakan batas diskon, mengevaluasi promosi pada kategori produk tertentu, serta menyesuaikan strategi promosi di masing-masing regional, perusahaan memiliki peluang yang sangat besar untuk meningkatkan margin profit tanpa perlu mengorbankan pertumbuhan omzet.
