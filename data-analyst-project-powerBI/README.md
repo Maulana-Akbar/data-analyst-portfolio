@@ -122,12 +122,7 @@ Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian stra
 
 ---
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Tools-Power%20BI-yellow?style=for-the-badge&logo=powerbi" alt="Power BI" />
-  <img src="https://img.shields.io/badge/Language-DAX-blue?style=for-the-badge" alt="DAX" />
-  <img src="https://img.shields.io/badge/Data%20Prep-Power%20Query-orange?style=for-the-badge" alt="Power Query" />
-  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status" />
-</p>
+## Author
 
 <p align="center">
   <a href="https://www.linkedin.com/in/radenmaulanaakbar" target="_blank">
