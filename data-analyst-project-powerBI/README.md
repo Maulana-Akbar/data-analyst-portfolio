@@ -34,7 +34,7 @@ Project ini menganalisis hubungan antara angka penjualan (*Sales*), tingkat disk
 
 ## Dataset
 
-* **Source:** `Sample - Superstore.csv` (Retail Dataset)
+* **Source:** [`Sample - Superstore.csv`](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final/data) (Retail Dataset)
 * **Total Records:** 9,994 Baris
 * **Total Features:** 21 Kolom
 
