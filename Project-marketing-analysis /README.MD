@@ -1,125 +1,120 @@
-Marketing & Growth Analytics Insights
+<h1 align="center">Analisis Efisiensi Periklanan dan Retensi Pelanggan</h1>
 
-Project Overview
+<p align="center">
+  <img src="https://img.shields.io/badge/Tools-Power%20BI%20%7C%20PostgreSQL-yellow?style=for-the-badge&logo=powerbi" alt="Tools" />
+  <img src="https://img.shields.io/badge/Language-SQL%20%7C%20DAX-blue?style=for-the-badge" alt="Language" />
+  <img src="https://img.shields.io/badge/Data%20Prep-DBeaver-orange?style=for-the-badge" alt="Data Prep" />
+  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status" />
+</p>
 
-Project ini menganalisis efisiensi periklanan dan retensi pelanggan berdasarkan data performa pemasaran. Fokus utama dari analisis ini adalah untuk mengidentifikasi pemicu utama inefisiensi biaya iklan (Ad Cost), melacak titik kebocoran konversi (drop-off), serta memberikan rekomendasi bisnis berbasis data guna mencegah kerugian finansial akibat ketergantungan kronis pada iklan berbayar (Paid Ads).
+---
 
-"Jebakan Biaya Iklan vs Retensi Pelanggan"
+## Project Overview
 
-Kejatuhan struktur pemasaran pada model akuisisi agresif membuktikan bahwa ketergantungan pada Paid Ads tanpa ditopang oleh konversi halaman dan retensi jangka panjang hanya akan menciptakan ilusi tingginya trafik sekaligus menghancurkan margin keuntungan secara fatal.
+Project ini menganalisis efisiensi biaya periklanan (*Paid Ads*) dan tingkat retensi pelanggan menggunakan dataset pemasaran digital. Tujuan utama dari analisis ini adalah untuk mengidentifikasi pemicu inefisiensi anggaran iklan, melacak titik kebocoran trafik konversi (*funnel drop-off*), mengevaluasi pengaruh retensi terhadap pendapatan, serta memberikan rekomendasi strategis berbasis data guna membantu mencegah pendarahan finansial akibat strategi akuisisi yang kurang optimal[cite: 16].
 
-Problem Statement & Business Questions
+<blockquote align="center">
+  <b>"The Customer Acquisition Trap"</b><br>
+  <i>Kejatuhan struktur pemasaran digital membuktikan bahwa ketergantungan kronis pada iklan berbayar tanpa optimalisasi konversi halaman dapat menciptakan ilusi tingginya trafik sekaligus menghancurkan margin keuntungan secara fatal[cite: 16].</i>
+</blockquote>
 
-Mengapa pengeluaran iklan berbayar yang masif gagal memberikan pengembalian modal yang sepadan (low ROAS)?
+---
 
-Di mana titik kebocoran trafik (traffic drop-off) paling krusial terjadi dalam conversion funnel?
+## Business Questions
 
-Bagaimana pola retensi pelanggan berdampak terhadap akumulasi pendapatan (revenue) bisnis secara keseluruhan?
+- Bagaimana korelasi antara metrik pemasaran, konversi transaksi, dan durasi retensi pelanggan[cite: 25]?
+- Bagaimana performa perbandingan antara total pendapatan (*revenue*) dan biaya iklan (*ad cost*) pada masing-masing saluran pemasaran[cite: 27]?
+- Di tahap mana titik kebocoran trafik konversi (*conversion funnel drop-off*) paling kritis terjadi[cite: 28]?
+- Sejauh mana pengaruh durasi retensi pelanggan (*retention month*) terhadap perolehan pendapatan bisnis[cite: 29]?
 
-Langkah strategis apa yang dapat diambil untuk mengoptimalkan anggaran periklanan dan meningkatkan retensi pembeli?
+---
 
-Dataset
+## Dataset
 
-Sumber: practical_data_marketing_growth_analytics.csv
+- **Sumber:** `practical_data_marketing_growth_analytics.csv` (Marketing Growth Analytics Dataset)[cite: 17]
+- **Jumlah Baris:** 800 baris[cite: 19]
+- **Jumlah Kolom:** 16 kolom[cite: 19]
 
-Jumlah Baris: 800 baris
+---
 
-Jumlah Kolom: 16 kolom (user_id, first_visit_date, channel, source, device, sessions, page_views, bounce, add_to_cart, purchase, revenue, ad_cost, clicks, impressions, repeat_purchase, retention_month)
+## Data Preparation
 
-Data Preparation & Cleaning
+Proses pembersihan dan manipulasi data dilakukan menggunakan SQL di DBeaver untuk memastikan kelancaran analisis. Berikut adalah tahapan yang dilakukan beserta hasilnya:
 
-Proses pembersihan dan manipulasi data dilakukan menggunakan PostgreSQL untuk memastikan integritas dan akurasi analisis. Berikut adalah tahapan yang dilakukan:
+- **Penilaian Kualitas Data:** Validasi untuk memastikan tidak ada nilai yang hilang (*missing values*) serta tidak ada data duplikat pada baris transaksi[cite: 19].
+  - **Hasil:** Dataset terbukti bersih dengan hasil **0 *missing values*** dan **0 data duplikat**[cite: 19].
+- **Konversi Tipe Data:** Mengubah tipe data pada kolom `first_visit_date` menjadi format tanggal (`DATE`)[cite: 22].
+  - **Hasil:** Kolom tanggal berhasil disesuaikan sehingga fungsi analisis berbasis waktu dapat berjalan dengan akurat[cite: 22].
+- **Identifikasi Anomali / Outlier:** Evaluasi sebaran distribusi data numerik dan kategorikal[cite: 23, 24].
+  - **Hasil:** Ditemukan anomali wajar pada `revenue` (150 transaksi bernilai tinggi) dan `ad_cost` (89 transaksi membutuhkan biaya besar). Pada kategori, dominasi kuat tercatat pada perangkat *Mobile* (63,00%) dan saluran *Paid Ads* (31,38%)[cite: 24].
 
-Pemeriksaan Kualitas Data:
+---
 
-Hasil: Dataset terbukti bersih dengan 0 missing values dan 0 data duplikat dari total 800 baris data.
+## Tools & Technologies
 
-Konversi Tipe Data:
+- **PostgreSQL & DBeaver:** Digunakan untuk eksekusi kueri relasional, pembersihan data, dan transformasi tipe data.
+- **Power BI Desktop:** Digunakan untuk pemodelan data, pembuatan ukuran, dan pembangunan *Dashboard* interaktif[cite: 30].
+- **DAX (Data Analysis Expressions):** Digunakan untuk kalkulasi agregasi dan metrik performa bisnis.
 
-Mengubah tipe data pada kolom first_visit_date dari VARCHAR(50) menjadi tipe DATE.
+---
 
-Hasil: Tipe data berhasil disesuaikan sehingga fungsi kalkulasi berbasis waktu (time-series) dan agregasi berjalan akurat.
+## Key Findings
 
-Analisis Outlier & Konsistensi Data:
+### 1. Analisis Korelasi Metrik Pemasaran
+- Terjadinya konversi transaksi (*purchase*) memiliki **korelasi paling kuat** dengan `revenue` (0.88) dan durasi retensi pelanggan (`retention_month`, 0.81)[cite: 25].
+- Sebaliknya, pengeluaran biaya iklan (`ad_cost`) hanya menunjukkan **korelasi yang sangat lemah (0.02)** terhadap konversi maupun pendapatan[cite: 25].
 
-Outlier Numerikal: Ditemukan 150 outlier pada revenue (wajar karena nilai transaksi tinggi) dan 89 outlier pada ad_cost (menandakan adanya pengeluaran iklan terpusat yang tinggi).
+### 2. Performa Utama Bisnis & Inefisiensi Iklan Berbayar
+- Total pendapatan tercatat sebesar **Rp41.003.905** dengan total biaya iklan **Rp10.948.907**[cite: 26].
+- Rasio ROAS khusus iklan berbayar berada di angka tipis **1.20x** (mendekati titik impas) dengan rata-rata retensi hanya **0.43 bulan**, mengindikasikan dominasi *one-time buyer*[cite: 26].
+- Saluran *Paid Ads* menyerap seluruh biaya iklan namun hanya menghasilkan pendapatan Rp13.177.258,00, sementara saluran organik secara kumulatif mampu menyumbang **Rp27.826.647,00** tanpa biaya iklan[cite: 27].
 
-Outlier Kategorikal: Mayoritas pengguna mengakses platform melalui perangkat Mobile (63.00%) dan saluran Paid Ads (31.38%).
+### 3. Kebocoran Trafik pada Tahap Pertimbangan (*Funnel Drop-off*)
+- Rasio klik (*CTR*) tercatat sebesar 4.40% dari total 442.700 impresi, namun mengalami penurunan tajam di mana **hanya 1.69% pengunjung yang melanjutkan ke tahap *Add to Cart***[cite: 28].
+- Sebaliknya, konversi dari keranjang ke pembelian (*Cart-to-Purchase*) tergolong cukup tinggi di angka 45.59%[cite: 28].
 
-Hasil: Ditemukan bahwa tingkat keterlibatan lanjutan tergolong sangat rendah karena didominasi pengguna yang tidak melakukan add_to_cart (58.88%), tidak purchase (81.25%), dan tidak repeat_purchase (94.00%).
+### 4. Pengaruh Retensi terhadap Pendapatan
+- Pendapatan tercatat nihil pada periode awal (`retention_month = 0`) dan **mencapai puncaknya pada bulan pertama (Rp19.186.354)** sebelum berangsur melandai pada bulan-bulan berikutnya[cite: 29].
+- Pola ini menunjukkan bahwa perolehan pendapatan mayoritas terakumulasi pada fase awal retensi pengguna[cite: 29].
 
-Tools & Technologies
+---
 
-Power BI Desktop: Digunakan untuk pemodelan data, pembuatan measures (DAX), visualisasi conversion funnel, dan pembuatan interactive dashboard.
+## Dashboard Highlights
 
-PostgreSQL: Digunakan untuk tahap data exploration, data cleaning, konversi tipe data, serta uji konsistensi kolom.
+*Dashboard* interaktif Power BI yang dibuat mencakup visualisasi berikut:
+- **Kartu Ringkasan (KPI):** Metrik untuk Total Revenue, Total Ad Cost, ROAS, dan Avg Retention[cite: 30].
+- **Grafik Batang & Garis (*Ad Cost vs Revenue by Channel*):** Perbandingan penyerapan biaya iklan dan perolehan pendapatan di setiap saluran pemasaran[cite: 30].
+- **Grafik Corong (*Conversion Funnel & Traffic Drop-off*):** Visualisasi penurunan trafik dari impresi hingga transaksi pembelian[cite: 30].
+- **Grafik Tren Garis (*Revenue Trend by Retention Month*):** Analisis pergerakan pendapatan berdasarkan durasi retensi bulanan[cite: 30].
+- **Filter Interaktif:** Filter berdasarkan saluran pemasaran (*Channel*) dan rentang tanggal kunjungan (*First Visit Date*)[cite: 30].
 
-SQL: Digunakan untuk kueri manipulasi data (Data Manipulation & Transformation).
+---
 
-Key Findings & Data Insights
+## Conclusion
 
-Korelasi Metrik Pemasaran:
+Analisis membuktikan bahwa ketergantungan pada iklan berbayar (*Paid Ads*) menghasilkan efisiensi yang rendah dengan ROAS yang tertahan di angka 1.20x[cite: 26, 27]. Titik kebocoran utama terletak pada penurunan drastis pengunjung menuju *Add to Cart* (1.69%), serta dominasi *one-time buyer* dengan retensi singkat (0.43 bulan)[cite: 26, 28]. Perusahaan memiliki peluang besar untuk mengoptimalkan profitabilitas dengan mengalihkan anggaran ke kanal organik, memperbaiki antarmuka halaman produk, serta memperkuat program re-aktivasi retensi jangka panjang[cite: 27, 28, 29].
 
-Konversi transaksi (purchase) memiliki korelasi paling kuat dengan revenue (0.88) dan durasi retensi pelanggan (retention_month, 0.81).
+---
 
-Sebaliknya, pengeluaran biaya iklan (ad_cost) hanya menunjukkan korelasi yang sangat lemah (0.02) terhadap konversi maupun pendapatan.
+## Business Recommendations
 
-Inefisiensi Saluran Iklan Berbayar (Paid Ads):
+Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian strategi yang direkomendasikan untuk mendukung pertumbuhan bisnis:
 
-Saluran Paid Ads menyerap seluruh biaya iklan sebesar Rp10.948.907,00 namun hanya menghasilkan pendapatan Rp13.177.258,00 (ROAS 1.20x / mendekati titik impas).
+1. **Efisiensi Anggaran Pemasaran & Optimalisasi Kanal Organik:**
+   Pengalokasian biaya iklan berbayar yang berkinerja rendah disarankan untuk dikurangi, agar anggaran dapat dialihkan guna mengoptimalkan konten dan pencarian organik yang terbukti jauh lebih efisien dalam menyumbang pendapatan[cite: 32].
 
-Saluran organik secara kumulatif mampu menyumbang Rp27.826.647,00 tanpa mengeluarkan biaya iklan sama sekali.
+2. **Perbaikan Antarmuka (UX) dan Penawaran Halaman Produk:**
+   Evaluasi serta perbaikan pada tampilan *landing page* dan informasi produk dianjurkan untuk segera dilakukan guna menekan tingkat kebocoran trafik (*drop-off*) yang ekstrem sebelum pengunjung masuk ke keranjang belanja[cite: 32].
 
-Titik Kebocoran Trafik Utama (Landing Page Drop-off):
+3. **Penerapan Program Re-aktivasi & Retensi Pelanggan:**
+   Strategi pemasaran dianjurkan untuk lebih difokuskan pada program re-aktivasi—seperti insentif/pemberian *voucher* untuk pembelian kedua—guna menekan dominasi *one-time buyer* dan menjaga stabilitas retensi pelanggan jangka panjang[cite: 32].
 
-Dari total 442.700 impressions, rasio klik (CTR) tercatat 4.40% (19.493 klik).
+---
 
-Penurunan tajam terjadi saat hanya 1.69% (329 pengguna) yang melanjutkannya ke tahap add_to_cart. Kebocoran utama terjadi pada landing page.
+## Author
 
-Namun, konversi dari keranjang ke pembelian (Cart-to-Purchase) tergolong tinggi di angka 45.59% (150 pembeli).
-
-Dominasi One-Time Buyer & Konsentrasi Retensi:
-
-Rata-rata retensi pelanggan berada di angka 0.43 bulan, menandakan dominasi pembeli sekali transaksi.
-
-Pendapatan mencapai puncaknya pada bulan pertama (Rp19.186.354,00) dan berangsur melandai pada bulan-bulan berikutnya.
-
-Dashboard Highlights
-
-Dashboard interaktif Power BI mencakup visualisasi berikut:
-
-Kartu Ringkasan (KPI Cards): Metrik untuk Total Revenue (Rp41,00M), Total Ad Cost (Rp10,95M), ROAS (1.20x), dan Avg Retention (0.43 bulan).
-
-Grafik Kombinasi (Bar & Line Chart): Perbandingan Ad Cost vs Revenue berdasarkan Marketing Channel.
-
-Conversion Funnel: Pelacakan titik drop-off trafik mulai dari Impressions, Clicks, Add to Cart, hingga Purchase.
-
-Tren Pendapatan (Line Chart): Revenue Trend by Retention Month untuk melihat pengaruh retensi terhadap pendapatan.
-
-Conclusion
-
-Bisnis saat ini mengalami inefisiensi alokasi pemasaran akibat ketergantungan pada saluran iklan berbayar yang menghasilkan ROAS sangat rendah. Hambatan utama konversi berada pada tahap landing page sebelum masuk ke keranjang belanja, serta minimnya retensi jangka panjang yang menyebabkan arus kas menumpuk hanya di bulan pertama.
-
-Business Recommendations
-
-Efisiensi Anggaran Pemasaran & Optimalisasi Kanal Organik:
-
-Pengalokasian biaya iklan berbayar yang berkinerja rendah disarankan untuk dikurangi, agar anggaran dapat dialihkan guna mengoptimalkan konten dan pencarian organik yang terbukti jauh lebih efisien dalam menyumbang pendapatan.
-
-Perbaikan Antarmuka (UX) dan Penawaran Halaman Produk:
-
-Evaluasi serta perbaikan pada tampilan landing page dan informasi produk dianjurkan untuk segera dilakukan guna menekan tingkat kebocoran trafik (drop-off) yang ekstrem sebelum pengunjung masuk ke keranjang belanja.
-
-Penerapan Program Re-aktivasi & Retensi Pelanggan:
-
-Strategi pemasaran dianjurkan untuk lebih difokuskan pada program re-aktivasi—seperti insentif/pemberian voucher untuk pembelian kedua—guna menekan dominasi one-time buyer dan menjaga stabilitas retensi pelanggan jangka panjang.
-
-Author
-
-Catatan Penggunaan:
-
-Semua teks, metrik, ringkasan data cleaning, key findings, hingga rekomendasi bisnis di atas telah disesuaikan 100% dengan isi dokumen PDF Anda.
-
-Format badge, garis pemisah <hr>, penulisan variabel dengan backticks (misal `Paid Ads`), serta blok kutipan dibuat presisi sesuai gaya gambar contoh.
-
-Anda tinggal mengganti URL pada tautan badge LinkedIn di bagian Author dengan tautan profil resmi Anda.
+<p align="center">
+  <a href="https://www.linkedin.com/in/radenmaulanaakbar" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Raden%20Maulana%20Akbar-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Raden Maulana Akbar" />
+  </a>
+</p>
