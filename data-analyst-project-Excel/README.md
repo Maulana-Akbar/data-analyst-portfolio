@@ -1,11 +1,9 @@
 # data-analyst-portfolio-project
 
-<h1 align="center">Superstore Profitability & Discount Impact Analysis</h1>
+<h1 align="center">Employee Attrition & High-Performance Loss Analysis</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Tools-Power%20BI-yellow?style=for-the-badge&logo=powerbi" alt="Power BI" />
-  <img src="https://img.shields.io/badge/Language-DAX-blue?style=for-the-badge" alt="DAX" />
-  <img src="https://img.shields.io/badge/Data%20Prep-Power%20Query-orange?style=for-the-badge" alt="Power Query" />
+  <img src="https://img.shields.io/badge/Tools-Microsoft%20Excel-green?style=for-the-badge&logo=microsoftexcel" alt="Microsoft Excel" />
   <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status" />
 </p>
 
@@ -13,112 +11,97 @@
 
 ## Project Overview
 
-Project ini menganalisis hubungan antara angka penjualan (`Sales`), tingkat diskon (`Discount`), dan profitabilitas (`Profit`) menggunakan dataset **Sample - Superstore**. Tujuan utama dari analisis ini adalah untuk mengidentifikasi pemicu utama kebocoran profit, mengevaluasi batas aman pemberian diskon, dan memberikan rekomendasi bisnis berbasis data guna membantu mencegah penurunan finansial akibat strategi pemotongan harga yang kurang optimal.
+Project ini menganalisis pola dan pendorong utama keluarnya karyawan (*attrition*) serta mendeteksi risiko kehilangan talenta berkinerja tinggi (*high-performer loss*) menggunakan Microsoft Excel[cite: 2]. Berdasarkan 3.000 baris data karyawan mentah, analisis ini bertujuan untuk mengevaluasi validasi status karyawan melalui tanggal keluar (`ExitDate`), sebaran performa (Rating 1–5), serta identifikasi *outlier* pada tingkat departemen dan jenis kepegawaian[cite: 2].
 
 <blockquote align="center">
-  <b>"Ilusi Volume Penjualan vs Margin Keuntungan"</b><br>
-  <i>Kejatuhan ritel raksasa membuktikan bahwa ketergantungan pada diskon yang terlalu tinggi dapat menciptakan ilusi tingginya pendapatan sekaligus menggerus margin keuntungan.</i>
+  <b>"Analisis Risiko Kehilangan Talenta Terbaik"</b><br>
+  <i>Tingginya angka pengunduran diri karyawan yang dibarengi dengan hilangnya talenta berkinerja tinggi dapat mengancam stabilitas dan produktivitas operasional perusahaan.</i>
 </blockquote>
 
 ---
 
 ## Business Questions
 
-- Bagaimana dampak pemberian diskon terhadap profitabilitas perusahaan secara keseluruhan?
-- Berapa ambang batas maksimal diskon (*tipping point*) sebelum transaksi berbalik menjadi rugi?
-- `Sub-Category` produk dan wilayah (`Region`) mana yang menjadi penyumbang kerugian terbesar ketika diberikan diskon?
-- Bagaimana tren keuntungan dan kerugian pada produk berbiaya logistik tinggi secara historis pada tahun 2014 hingga 2017?
+- **Q1 (Validasi Status & Attrition Makro):** Berapa jumlah riil karyawan yang *resign* berdasarkan validasi tanggal keluar (`ExitDate`), dan berapa tingkat *overall attrition rate* perusahaan?[cite: 2]
+- **Q2 (Kualitas Attrition & High-Performance Loss):** Berapa banyak karyawan berkinerja tinggi (Rating 4 & 5) yang mengundurkan diri, dan apakah proporsinya melampaui ambang batas toleransi risiko?[cite: 2]
+- **Q3 (Unit Kerja & Departemen Terdampak):** Departemen dan jenis kepegawaian mana yang paling banyak menyumbang *outlier* karyawan berkinerja tinggi yang mengundurkan diri?[cite: 2]
 
 ---
 
 ## Dataset
 
-- **Sumber:** [`Sample - Superstore.csv`](https://www.kaggle.com/datasets/vivek468/superstore-dataset-final/data) (Retail Dataset)
-- **Jumlah Baris:** 9.994 baris
-- **Jumlah Kolom:** 21 kolom
+- **Sumber:** `employee_data.csv`[cite: 2]
+- **Jumlah Baris:** 3.000 baris[cite: 2]
+- **Jumlah Kolom:** 26 kolom[cite: 2]
+- **Isi dari Raw Data:**
+  - Identitas & tanggal masuk/keluar (`EmpID`, `StartDate`, `ExitDate`, `TerminationDescription`)[cite: 2]
+  - Struktur organisasi (`DepartmentType`, `Division`, `BusinessUnit`, `Supervisor`)[cite: 2]
+  - Status kepegawaian (`EmployeeStatus`, `EmployeeType`, `PayZone`, `Title`)[cite: 2]
+  - Kinerja (`Performance Score`, `Current Employee Rating`)[cite: 2]
+  - Demografi (`DOB`, `Gender`, `Race`, `Marital Status`, `State`, `LocationCode`, `ADEmail`)[cite: 2]
 
 ---
 
 ## Data Preparation
 
-Proses pembersihan dan manipulasi data dilakukan untuk memastikan kelancaran analisis. Berikut adalah tahapan yang dilakukan beserta hasilnya:
+Langkah pembersihan dan transformasi data yang dilakukan agar siap dianalisis:
 
-- **Penilaian Kualitas Data:** Validasi untuk memastikan tidak ada nilai yang hilang atau kosong serta tidak ada data duplikat pada baris transaksi.
-  - **Hasil:** Dataset terbukti bersih dengan hasil **0 *missing values*** dan **0 data duplikat**.
-- **Konversi Tipe Data:** Mengubah tipe data pada kolom `Order Date` dan `Ship Date` menjadi format tanggal, kolom `Sales`, `Profit`, dan `Discount` menjadi format desimal (*float*), serta `Quantity` menjadi bilangan bulat (*integer*).
-  - **Hasil:** Seluruh tipe data berhasil disesuaikan (mengikuti standar *Locale* United States) sehingga fungsi kalkulasi numerik dan analisis berbasis waktu (*time-series*) dapat berjalan dengan akurat.
-- **Identifikasi Anomali Kategorikal:** Evaluasi sebaran distribusi (*outlier* kategorikal) pada beberapa metrik dimensi seperti `Ship Mode`, `Segment`, dan `Region`.
-  - **Hasil:** Ditemukan dominasi transaksi pada opsi pengiriman *Standard Class* (59,72%), pelanggan segmen *Consumer* (51,94%), serta konsentrasi penjualan tertinggi di region *West* (terutama negara bagian California sebesar 20,02%).
-- **Rekayasa Fitur (*Feature Engineering*):**
-  - Membuat kolom `Discount Segment` untuk mengelompokkan rentang nilai diskon. 
-    - **Hasil:** Terbentuk 6 kelompok rentang diskon (Mulai dari *0% (No Discount)* hingga *41%+*) yang mempermudah evaluasi ambang batas aman pemotongan harga.
-  - Membuat kolom `Order Type` untuk membedakan transaksi yang menggunakan diskon dengan transaksi harga normal. 
-    - **Hasil:** Transaksi berhasil dipisahkan secara tegas menjadi dua kategori (*Discounted* dan *No Discount*) untuk memperjelas perbandingan profitabilitas antara keduanya.
+- **1. Cek Duplikasi:** Menggunakan rumus `COUNTA()` dan `UNIQUE()` pada `EmpID`. Ketika jumlah data unik sama dengan jumlah semua data, maka dipastikan tidak ada data yang duplikasi[cite: 2].
+- **2. Konversi Tipe Data:** Menggunakan `DATEVALUE()` untuk mengubah tanggal bertipe teks menjadi format *Date* asli[cite: 2].
+- **3. Missing Value:** Kolom `ExitDate` dan `TerminationDescription` yang kosong pada 48,9% baris (1.468 data) dipertahankan apa adanya karena bermakna karyawan masih Aktif (bukan data hilang/error). Untuk mengetahui jumlahnya menggunakan rumus `COUNTBLANK()`[cite: 2].
+- **4. Inkonsistensi Data:** Mengoreksi kolom status awal yang hanya mencatat 321 *resign*. Dibuat logika acuan: jika `ExitDate` terisi, maka statusnya adalah "Resigned" (total 1.532 baris)[cite: 2].
+- **5. Penanganan Outlier:** Mengidentifikasi 356 karyawan berkinerja tinggi (Rating 4 & 5) yang mengundurkan diri sebagai *Outlier*, untuk ditandai sebagai indikator utama *Bad Attrition* (melampaui ambang batas toleransi risiko 15%)[cite: 2].
+- **6. Kolom Baru (Formula):**
+  - `Status`: Kolom untuk menentukan jumlah karyawan yang *resign*[cite: 2].
+  - `Cek_outlier`: Kolom untuk mengecek karyawan yang *resign* dengan *performance rating* $\ge$ 4[cite: 2].
 
 ---
 
 ## Tools & Technologies
 
-- **Power BI Desktop:** Digunakan untuk pemodelan data, pembuatan ukuran (DAX Measures), dan pembuatan *Dashboard* interaktif.
-- **Power Query:** Digunakan untuk tahap pembersihan data dan transformasi bahasa atau *locale*.
-- **DAX (Data Analysis Expressions):** Digunakan untuk kalkulasi agregasi dan rekayasa fitur data.
+- **Microsoft Excel:** Formula (`IF`, `COUNTIF`, `COUNTA`, `DATEDIF`), Data Validation, PivotTable & PivotChart, Conditional Formatting, Slicer Filter, dan Interactive Executive Dashboard[cite: 2].
 
 ---
 
 ## Key Findings
 
-### 1. Tingginya Penjualan Belum Tentu Berbanding Lurus dengan Margin
-- Meskipun perusahaan berhasil mencatatkan nilai `Sales` yang masif sebesar **$2,297,200.86**, rata-rata pemberian diskon yang menyentuh **15.62%** memberikan tekanan yang menyebabkan margin keuntungan tertahan di angka tipis **12.47%** (dengan total `Profit` **$286,397**).
+### 1. Tingginya Attrition Rate Makro
+- Perusahaan mengalami tingkat *attrition* yang sangat tinggi yaitu **51,07%** (sebanyak **1.532** dari 3.000 karyawan *resign*)[cite: 2].
 
-### 2. Ambang Batas Aman Diskon
-- Transaksi pada rentang `Discount` **0% hingga 20%** konsisten menghasilkan profit yang positif, dengan rata-rata `Profit` tertinggi sebesar **$96.06** pada rentang diskon 1%–10%.
-- Ketika diskon yang diberikan melebihi **20%**, rata-rata `Profit` berbalik menjadi negatif, mencatatkan kerugian terdalam pada segmen diskon 31%–40% sebesar **-$109.22**.
+### 2. Ancaman Hilangnya Talenta Terbaik (High-Performance Loss)
+- Terdapat **356** karyawan berkinerja tinggi (Rating 4 & 5) yang mengundurkan diri, menyumbang **23,24%** dari total karyawan yang *resign*, di mana angka ini melampaui ambang batas toleransi risiko sebesar 15%[cite: 2].
 
-### 3. Kerugian Terpusat pada Produk Berbiaya Logistik Tinggi
-- Seluruh produk yang terjual tanpa diskon mencatatkan profitabilitas positif.
-- Namun, penerapan diskon pada produk berat menyeret performa keuntungan ke area negatif. Kerugian rata-rata terparah dialami oleh produk dalam `Sub-Category` **Machines (-$276.20)** dan **Tables (-$125.51)**.
-
-### 4. Kebocoran Profit Berdasarkan Wilayah 
-- Transaksi tanpa diskon di seluruh wilayah (`Region`) bernilai positif. 
-- Ketika produk *Tables & Machines* dijual dengan diskon, wilayah **South** dan **East** mencatatkan kerugian rata-rata terparah, masing-masing sebesar **-$422.46** dan **-$263.32**.
-
-### 5. Tren Pendarahan Finansial Secara Historis
-- Evaluasi tren tahun 2014 hingga 2017 menunjukkan bahwa transaksi *Tables & Machines* tanpa diskon selalu stabil di area positif. Sebaliknya, transaksi dengan diskon pada produk yang sama konsisten berada di area negatif, menandakan adanya pendarahan finansial yang terus berulang setiap tahunnya.
+### 3. Departemen Production & Sales Paling Rentan
+- Departemen **Production** (250 *outlier*) dan **Sales** (59 *outlier*) menjadi penyumbang terbesar hilangnya karyawan berkinerja tinggi[cite: 2].
 
 ---
 
 ## Dashboard Highlights
 
-*Dashboard* interaktif Power BI yang dibuat mencakup visualisasi berikut:
-- **Kartu Ringkasan (KPI):** Metrik untuk total `Sales`, total `Profit`, rata-rata `Discount`, dan Profit Margin.
-- **Grafik Penyebaran (Scatter Plot):** Analisis dampak pemberian diskon terhadap perolehan profit.
-- **Grafik Batang (Bar Chart):** Rata-rata profit berdasarkan kelompok diskon (`Discount Segment`) dan rata-rata profit berdasarkan `Sub-Category`.
-- **Analisis Regional:** Kinerja profitabilitas untuk produk *Tables & Machines* di setiap `Region`.
-- **Grafik Tren Garis (Line Chart):** Tren profitabilitas historis (2014–2017).
+*Dashboard* interaktif Excel yang dibuat mencakup visualisasi berikut:
+- **Ringkasan Kartu (KPI):** Total Resigned (1532), Attrition Rate (51,07%), dan High-Performance Loss (356)[cite: 2].
+- **Slicer Filter:** Berdasarkan `DepartmentType` dan `EmployeeType`[cite: 2].
+- **Grafik Batang & Pie Chart:** Sebaran status karyawan berdasarkan *Performance Rating* dan proporsi status karyawan[cite: 2].
+- **Analisis Departemen:** Sebaran *High-Performer Loss* per departemen[cite: 2].
 
 ---
 
 ## Conclusion
 
-Perusahaan telah berhasil mencatatkan volume penjualan yang kuat di pasar. Meskipun demikian, penggunaan diskon yang kurang terukur memberikan dampak pengurangan yang cukup signifikan terhadap potensi keuntungan perusahaan. Dengan mempertimbangkan optimalisasi kebijakan batas diskon, mengevaluasi promosi pada kategori produk tertentu, serta menyesuaikan strategi promosi di masing-masing regional, perusahaan memiliki peluang yang sangat besar untuk meningkatkan margin profit tanpa perlu mengorbankan pertumbuhan omzet.
+Perusahaan menghadapi masalah serius terkait tingginya angka *attrition* makro (51,1%) serta ancaman kritis berupa hilangnya talenta berkinerja tinggi (23,24%) yang terkonsentrasi di departemen *Production* dan *Sales*. Hal ini memerlukan evaluasi mendalam serta tindakan retensi talenta yang tepat agar operasional perusahaan tidak terganggu.
 
 ---
 
 ## Business Recommendations
 
-Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian strategi yang direkomendasikan untuk mendukung pertumbuhan profit perusahaan:
+Berdasarkan *insight* dari analisis, berikut adalah rekomendasi strategi yang diberikan:
 
-1. **Penyesuaian Ambang Batas Diskon Maksimal:**
-   Disarankan bagi perusahaan untuk mempertimbangkan kebijakan pembatasan diskon maksimal di angka **20%** pada sebagian besar lini produk. Hal ini direkomendasikan karena data historis menunjukkan pemberian diskon di atas angka tersebut rentan memicu kerugian finansial.
-   
-2. **Evaluasi Kebijakan Harga untuk Produk Berbiaya Logistik Tinggi:**
-   Sangat direkomendasikan untuk meninjau kembali skema harga dan struktur margin pada produk dengan biaya operasional tinggi, seperti `Machines` dan `Tables`. Sebaiknya, pemberian promosi diskon pada kategori ini dievaluasi atau dikurangi agar tidak membebani margin keuntungan.
-   
-3. **Peninjauan Kembali Strategi Penjualan di Wilayah Tertentu:**
-   Terdapat indikasi kerugian akibat diskon yang cukup signifikan di wilayah **South** dan **East**. Oleh karena itu, disarankan untuk melakukan evaluasi terhadap struktur biaya promosi di wilayah-wilayah tersebut agar profitabilitas dapat ditingkatkan.
-   
-4. **Peralihan Strategi Promosi ke Metode Bundling:**
-   Sebagai alternatif dari pemotongan harga langsung, direkomendasikan untuk mulai menerapkan strategi *bundling* produk. Menggabungkan produk yang banyak diminati dengan produk bermargin tinggi diharapkan dapat mempertahankan antusiasme pembeli sekaligus menjaga tingkat profitabilitas secara menyeluruh.
+1. **Tinjau Ulang Kepuasan Karyawan:** 
+   Melakukan evaluasi menyeluruh terhadap tingkat kepuasan karyawan guna menekan angka pengunduran diri secara makro[cite: 2].
+2. **Berikan Insentif untuk High Performer:** 
+   Menyediakan program insentif, penghargaan, dan jalur pengembangan karier khusus kepada karyawan dengan kinerja tinggi untuk mencegah *High-Performance Loss*[cite: 2].
+3. **Evaluasi Beban & Lingkungan Kerja (Production & Sales):** 
+   Melakukan evaluasi mendalam terkait beban kerja serta kondisi lingkungan kerja khusus di divisi *Production* dan *Sales* yang menjadi penyumbang *outlier* terbesar[cite: 2].
 
 ---
 
@@ -129,6 +112,3 @@ Berdasarkan *insight* yang ditemukan, terdapat beberapa langkah penyesuaian stra
     <img src="https://img.shields.io/badge/LinkedIn-Raden%20Maulana%20Akbar-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Raden Maulana Akbar" />
   </a>
 </p>
-```eof
-
-Your README.md file has been successfully generated and formatted for your GitHub repository! Feel free to let me know if you need any adjustments.
