@@ -1,10 +1,8 @@
-# data-analyst-portfolio-project
-
-<h1 align="center">Analisis Jenis Produk dan Visibilitas Ruang Pajang Terhadap Penjualan Ritel</h1>
+<h1 align="center">Market Basket Analysis: Menggali Pola Pembelian Konsumen untuk Meningkatkan Penjualan Ritel</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Tools-Python-blue?style=for-the-badge&logo=python" alt="Python" />
-  <img src="https://img.shields.io/badge/Libraries-Pandas%20%7C%20NumPy-orange?style=for-the-badge" alt="Libraries" />
+  <img src="https://img.shields.io/badge/Tools-Python%20%7C%20Power%20BI-blue?style=for-the-badge&logo=python" alt="Tools" />
+  <img src="https://img.shields.io/badge/Libraries-Pandas%20%7C%20Mlxtend-orange?style=for-the-badge" alt="Libraries" />
   <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" alt="Status" />
 </p>
 
@@ -12,87 +10,89 @@
 
 ## Project Overview
 
-Ruang pajang (rak) toko ritel yang terbatas menuntut manajemen untuk menata produk secara strategis guna mendongkrak omzet[cite: 3]. Tantangan utamanya adalah memastikan karakteristik dan tingkat visibilitas produk di rak benar-benar menghasilkan penjualan yang optimal, bukan sekadar membuang ruang[cite: 3]. Project ini menggunakan Python untuk menganalisis hubungan antara jenis produk, visibilitas rak, serta performa penjualan pada dataset **BigMart Sales**[cite: 3].
+Area kasir terbukti menjadi titik '*Impulse Buying*' paling krusial di industri ritel. Berkaca dari fenomena jurang *small basket size*, analisis ini diinisiasi untuk membedah apakah pola asosiasi produk pada dataset berpotensi mampu mendorong peningkatan ukuran keranjang yang sehat (strategi *cross-selling*), atau justru membiarkan potensi penjualan hilang begitu saja akibat ketiadaan strategi penataan tata letak yang tepat.
 
 <blockquote align="center">
-  <b>"Optimalisasi Ruang Rak vs Performa Penjualan"</b><br>
-  <i>Ruang pajang yang luas tidak otomatis menaikkan angka penjualan tanpa didukung oleh permintaan pasar yang tinggi.</i>
+  <b>"Strategi Impulse Buying vs Stagnansi Ukuran Keranjang"</b><br>
+  <i>Penempatan produk komplementer berskala kecil di area antrean kasir seringkali menjadi cara paling minim risiko untuk mengonversi pelanggan yang tadinya hanya membeli 1-2 barang menjadi 3 barang.</i>
 </blockquote>
 
 ---
 
 ## Business Questions
 
-- Bagaimana sebaran dan karakteristik data penjualan ritel serta kondisi kualitas data (missing values, duplikasi, dan anomali)?
-- Bagaimana tahapan pembersihan data (*data cleaning*) dan penanganan anomali visibilitas rak bernilai nol?
-- Jenis produk apa saja yang menjadi penyumbang omzet terbesar serta memiliki rata-rata penjualan per produk tertinggi?
-- Bagaimana dinamika pengaruh tingkat visibilitas ruang pajang (*Item Visibility*) terhadap performa penjualan produk?
+- Bagaimana sebaran profil ukuran keranjang belanja (*basket size*) pelanggan ritel saat ini?
+- Apa saja kombinasi produk yang memiliki korelasi pembelian terkuat dan berpotensi untuk didorong penjualannya?
+- Bagaimana tren fluktuasi aktivitas transaksi harian untuk menyarankan waktu eksekusi strategi promosi yang sekiranya efektif?
+- Seberapa besar proyeksi peningkatan nilai keranjang belanja rata-rata apabila rekomendasi strategi asosiasi produk diimplementasikan?
 
 ---
 
 ## Dataset
 
-- **Sumber:** `BigMart Sales Data.csv`[cite: 3]
-- **Ukuran:** 8.523 baris $\times$ 12 kolom[cite: 3]
-- **Isi dari Raw Data:**
-  - **Data Outlet:** `Outlet_Identifier`, `Outlet_Establishment_Year`, `Outlet_Size`, `Outlet_Location_Type`, `Outlet_Type`, `Item_Outlet_Sales`[cite: 3]
-  - **Data Produk:** `Item_Identifier`, `Item_Weight`, `Item_Fat_Content`, `Item_Visibility`, `Item_Type`, `Item_MRP`[cite: 3]
+- **Sumber:** `Groceries_dataset.csv` (Kaggle Bootcamp Project)
+- **Ukuran:** 38.765 baris data (sebelum *cleaning*) yang merekam transaksi 3.898 pelanggan unik selama periode 2014-2015.
+- **Isi dari Raw Data:** Memuat 3 atribut utama yaitu `Member_number`, `Date`, dan `itemDescription` (mencakup 167 varian produk ritel).
 
 ---
 
 ## Data Preparation & Cleaning
 
-Langkah pembersihan dan transformasi data yang dilakukan untuk memastikan kelancaran analisis:
+Langkah pembersihan dan transformasi data yang dilakukan untuk mengupayakan kelancaran pemodelan *Association Rules*:
 
-- **1. Pengecekan Duplikasi:** 
-  - *Hasil:* **0% data duplikat** (seluruh baris valid)[cite: 3].
-- **2. Penanganan Missing Value:**
-  - `Item_Weight`: Ditemukan 1.463 data hilang (17,17%). Diimputasi menggunakan rata-rata berat dari `Item_Identifier` yang sama, dan sisa 4 data diimputasi dengan rata-rata keseluruhan[cite: 3].
-  - `Outlet_Size`: Ditemukan 2.410 data hilang (28,28%). Berdasarkan analisis *crosstab*, data dikelompokkan dan diimputasi menggunakan kategori `'Small'`[cite: 3].
-- **3. Penyeragaman Kategori (`Item_Fat_Content`):**
-  - *Hasil:* Berhasil merapikan variasi penulisan (*Low Fat*, *Regular*, *low fat*, *LF*, *reg*) menjadi 2 kategori standar (*Low Fat* dan *Regular*)[cite: 3].
-- **4. Penanganan Anomali Visibilitas (`Item_Visibility`):**
-  - *Hasil:* Ditemukan 526 baris (6,17%) anomali bernilai `0.0` (barang menghasilkan penjualan tetapi keterlihatan rak 0). Nilai tersebut diimputasi menggunakan rata-rata visibilitas dari masing-masing `Outlet_Identifier`[cite: 3].
-- **5. Analisis Outlier:**
-  - Teridentifikasi outlier pada `Item_Outlet_Sales` (186 baris) dan `Item_Visibility` (154 baris) menggunakan metode IQR. Seluruh outlier **dipertahankan** karena mewakili kondisi bisnis nyata (*high-performing products*), bukan kesalahan input[cite: 3].
+- **1. Pengecekan dan Perbaikan Tipe Data:** 
+  - *Hasil:* Mengubah kolom `Member_number` dari tipe integer menjadi *string*, serta mengonversi kolom `Date` dari *string* menjadi tipe `datetime`.
+- **2. Pembuatan Identitas Keranjang (Transaction ID):** 
+  - *Hasil:* Dilakukan penggabungan antara `Member_number` dan `Date` untuk membentuk kolom `Transaction_ID` baru sebagai pengelompok pola keranjang harian pelanggan (menghasilkan 14.963 keranjang transaksi unik).
+- **3. Pembersihan Inkonsistensi String:** 
+  - *Hasil:* Menghapus keberadaan spasi berlebih (*whitespace*) pada teks di kolom `itemDescription`, khususnya pada entri produk seperti 'cream cheese ' dan 'roll products '.
+- **4. Penanganan Duplikasi:** 
+  - *Hasil:* Menghapus 759 baris duplikat (1,96%) yang timbul akibat pencatatan barang yang sama pada `Transaction_ID` yang sama. Total baris bersih menjadi 38.006.
+- **5. Feature Engineering & Analisis Outlier:** 
+  - *Hasil:* Membuat fitur tambahan meliputi `basket_size`, `Day_Name`, `Month`, dan `Basket_Category` (Small, Medium, Large). Sebanyak 746 transaksi *outlier* (> 4,5 barang) dipertahankan karena hal tersebut diasumsikan valid menandakan pelanggan yang berbelanja dalam jumlah masif.
+- **6. Pembuatan Basket Matrix:** 
+  - *Hasil:* Mengaplikasikan *One-Hot Encoding* untuk merestrukturisasi dataset transaksi menjadi matriks biner (0 dan 1) agar siap diolah oleh algoritma Apriori.
 
 ---
 
 ## Tools & Technologies
 
-- **Python:** Bahasa pemrograman utama untuk pengolahan dan analisis data[cite: 3].
-- **Pandas & NumPy:** Library untuk manipulasi dataframe, pembersihan data (*data cleaning*), pengelompokan (*grouping*), dan agregasi statistik[cite: 3].
+- **Python (Pandas & Mlxtend):** Bahasa pemrograman yang dimanfaatkan untuk *data cleaning*, rekayasa fitur (*feature engineering*), dan eksekusi algoritma Apriori untuk menemukan probabilitas *Association Rules*.
+- **Power BI:** Platform visualisasi yang digunakan untuk merancang *dashboard* interaktif analisis pola belanja pelanggan.
 
 ---
 
 ## Key Findings
 
-### 1. Dominasi Omzet Penjualan
-- Jenis produk seperti **Fruits and Vegetables** dan **Snack Foods** menjadi penyumbang total omzet terbesar bagi ritel karena memiliki jumlah varian produk yang paling masif di toko (di atas 1.200 produk)[cite: 3].
+### 1. Dominasi Transaksi Segmen Keranjang Kecil
+- Rata-rata ukuran keranjang belanja saat ini tertahan di angka 2,98 barang per nota. Hal ini diindikasikan oleh tingginya proporsi pelanggan harian yang hanya berbelanja 1 hingga 2 item (Segmen *Small* mendominasi sebesar 53,23%).
 
-### 2. Performa Penjualan per Produk Tertinggi (High Value)
-- Meskipun jumlah produknya lebih sedikit, jenis produk **Starchy Foods** (rata-rata 2.374,33) dan **Seafood** (rata-rata 2.326,07) mencatatkan rata-rata penjualan per produk tertinggi dibanding kategori lainnya[cite: 3].
+### 2. Kekuatan Asosiasi pada Produk Susu & Sosis
+- Analisis algoritma Apriori menemukan kombinasi produk `sausage` dengan `yogurt, whole milk` mencatatkan nilai Lift tertinggi sebesar 2,18. Tingginya angka ini mengindikasikan probabilitas yang kuat dari produk-produk tersebut untuk dibeli secara bersamaan oleh pelanggan.
 
-### 3. Dinamika Visibilitas Ruang Pajang (Rak)
-- Jenis produk **Breakfast** menduduki peringkat teratas dalam hal rata-rata visibilitas rak (0.09), namun penjualannya berada di papan tengah. Hal ini membuktikan bahwa ruang pajang yang luas tidak otomatis mendongkrak penjualan tanpa dukungan permintaan pasar yang tinggi[cite: 3].
+### 3. Puncak Aktivitas Transaksi pada Hari Kamis
+- Tren aktivitas belanja harian memperlihatkan pola yang spesifik, di mana hari Kamis secara konsisten mencatatkan volume transaksi puncak (2.188 transaksi), sedangkan angka terendah jatuh pada hari Senin.
 
 ---
 
 ## Conclusion
 
-Analisis menunjukkan bahwa penataan ruang pajang tidak boleh hanya mengandalkan luasnya area rak semata, melainkan harus diselaraskan dengan performa dan tingkat perputaran produk. Kategori produk dengan varian masif dan nilai rata-rata penjualan tinggi (*Starchy Foods* dan *Seafood*) memegang peran krusial dalam efisiensi etalase ritel[cite: 3].
+Rata-rata volume belanja ritel saat ini terlihat belum maksimal akibat tertahan oleh dominasi keranjang berukuran kecil (1-2 item). Kendati demikian, ekstraksi pola dari 110 aturan asosiasi menunjukkan probabilitas keterikatan antarproduk yang menjanjikan (dengan nilai *Lift* mencapai 2,18). Pola laten ini dapat dijadikan referensi data yang solid bagi manajemen untuk mempertimbangkan pendorongan pembelian impulsif dan merangsang *basket size* melalui taktik letak barang dan paket penawaran.
 
 ---
 
 ## Business Recommendations
 
-Berdasarkan *insight* yang ditemukan, berikut adalah rekomendasi strategi bisnis yang diusulkan:
+Berdasarkan *insight* yang ditemukan, berikut adalah beberapa rekomendasi strategis yang dapat dipertimbangkan:
 
-1. **Optimalisasi Ulang Ruang Etalase:**
-   Segera evaluasi dan kurangi jatah rak premium untuk produk **Breakfast**. Visibilitas yang luas nyatanya tidak mengerek penjualan mereka, sehingga ruang pajang berharga ini sebaiknya dilimpahkan ke kategori dengan perputaran yang lebih stabil[cite: 3].
+1. **Optimalisasi Tata Letak Area Kasir & Ujung Lorong (End-Cap):**
+   Manajemen disarankan untuk menyediakan *front-end chiller* yang berisi aneka keju di jalur antrean kasir guna memicu timbulnya pembelian impulsif. Selain itu, dapat dipertimbangkan pula pengaturan pajangan *end-cap* yang mendekatkan kompartemen produk segar dengan olahan susu agar konsumen lebih mudah melakukan *cross-buying*.
    
-2. **Strategi Promosi Kategori Unggulan:**
-   Kategori **Starchy Foods** dan **Seafood** terbukti ampuh menghasilkan margin dan performa penjualan yang kuat. Disarankan untuk menerapkan strategi *bundling* produk serta menempatkannya di etalase strategis guna memancing keranjang belanja konsumen yang lebih besar[cite: 3].
+2. **Fokus Program Bundling pada Hari Puncak Transaksi:**
+   Tim pemasaran dapat mempertimbangkan pengalokasian anggaran diskon dan paket penawaran (*bundling*) yang difokuskan pada 3 kombinasi produk teratas (contoh: *sausage, yogurt, dan whole milk*). Pelaksanaan taktik ini disarankan untuk dikonsentrasikan pada hari Kamis untuk mencoba memaksimalkan rasio konversi saat periode *traffic* pengunjung sedang tinggi.
+
+3. **Pelaksanaan A/B Testing untuk Validasi Proyeksi AOV:**
+   Sebagai langkah eksekusi dengan mitigasi risiko yang terukur, tim operasional disarankan untuk menjalankan *A/B Testing* selama satu bulan penuh khusus pada area pajangan *Whole milk* dan *Sausage*. Simulasi awal memproyeksikan bahwa potensi keberhasilan mengonversi 10% pelanggan dari intervensi ini dapat mendongkrak rata-rata keranjang (AOV) menjadi 3,28 barang per nota.
 
 ---
 
